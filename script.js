@@ -77,10 +77,67 @@ const lightHeight = lightWidth;
 
 var lightLayer = new Konva.Layer();
 
-var bottomRightLight = createRect(roadHalf + roadWidth + 2, roadY + roadHeight, lightWidth, lightHeight, "red", lightLayer);
-var bottomLeftLight = createRect(roadHalf - lightWidth, roadY + roadHeight, lightWidth, lightHeight, "red", lightLayer);
+const red = "red";
+const green = "green";
+const yellow = "yellow";
 
-var topLeftLight = createRect(roadHalf - lightWidth, roadHalfVertical - lightHeight, lightWidth, lightHeight, "red", lightLayer);
-var topRightLight = createRect(roadHalf + roadWidth + 2, roadHalfVertical - lightHeight, lightWidth, lightHeight, "red", lightLayer);
+var bottomRightLight = createRect(roadHalf + roadWidth + 2, roadY + roadHeight, lightWidth, lightHeight, red, lightLayer);
+var bottomLeftLight = createRect(roadHalf - lightWidth, roadY + roadHeight, lightWidth, lightHeight, red, lightLayer);
+
+var topLeftLight = createRect(roadHalf - lightWidth, roadHalfVertical - lightHeight, lightWidth, lightHeight, red, lightLayer);
+var topRightLight = createRect(roadHalf + roadWidth + 2, roadHalfVertical - lightHeight, lightWidth, lightHeight, red, lightLayer);
 
 stage.add(lightLayer);
+
+// Graphics ends here.
+// Light logic
+
+var timeouts = {
+    green: 4,
+    red: 5,
+    yellow : 1
+}
+
+var lights = [bottomLeftLight, topRightLight, topLeftLight, bottomRightLight];
+
+function startTimeout(light, isVertical) {
+
+    const RG = isVertical ? red : green;
+    
+    light.value = isVertical ? timeouts[red] : timeouts[green]; // Pre-arrange lights
+
+    light.lastPrimary = RG;
+
+    
+    light.changeLight = function (color) {
+        this.fill(color);
+        if (color != yellow)
+        this.lastPrimary = color;
+        lightLayer.draw();
+        value = timeouts[color];
+    };
+    
+    light.changeLight(RG);
+
+    light.getNextColor = function () {
+        var fill = this.attrs.fill;
+        if (fill == yellow) {
+            return this.lastPrimary == red ? green : red;
+        }
+        return yellow;
+    };
+
+    setInterval(function (light) { // Do these every second
+        if (--light.value <= 0) {
+            var color = light.getNextColor();
+            light.changeLight(color);
+            light.value = timeouts[color];
+        }
+        console.log("Işığın değişmesine " + light.value + " saniye");
+    }, 1000, light);
+}
+
+for (var i = 0; i < lights.length; i++) {
+    var light = lights[i];
+    startTimeout(light, i < 2);
+}
