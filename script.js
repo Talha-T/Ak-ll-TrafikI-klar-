@@ -41,6 +41,22 @@ function createImage(x, y, width, height, src, layer) { // Creates a road
     return imageObj;
 }
 
+function createRect(x, y, width, height, fill, layer) {
+    var rect = new Konva.Rect({
+        x: x,
+        y: y,
+        width: width,
+        height: height,
+        fill: fill,
+        stroke: 'black',
+        strokeWidth: 1
+    });
+
+    layer.add(rect);
+
+    return rect;
+}
+
 const roadX = calculateCenter(roadWidth, windowWidth); // Center X of the road
 const roadY = calculateCenter(roadHeight, windowHeight);
 
@@ -55,3 +71,16 @@ var horizontalRoad2 = createImage(roadHalf + roadWidth, roadY, windowWidth - roa
 
 var intersect = createImage(roadHalf, roadHalfVertical, roadWidth, roadHeight, "roadsquare.png", roadLayer);
 stage.add(roadLayer);
+
+const lightWidth = 60;
+const lightHeight = lightWidth;
+
+var lightLayer = new Konva.Layer();
+
+var bottomRightLight = createRect(roadHalf + roadWidth + 2, roadY + roadHeight, lightWidth, lightHeight, "red", lightLayer);
+var bottomLeftLight = createRect(roadHalf - lightWidth, roadY + roadHeight, lightWidth, lightHeight, "red", lightLayer);
+
+var topLeftLight = createRect(roadHalf - lightWidth, roadHalfVertical - lightHeight, lightWidth, lightHeight, "red", lightLayer);
+var topRightLight = createRect(roadHalf + roadWidth + 2, roadHalfVertical - lightHeight, lightWidth, lightHeight, "red", lightLayer);
+
+stage.add(lightLayer);
