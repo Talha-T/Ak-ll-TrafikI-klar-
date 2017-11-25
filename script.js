@@ -1,3 +1,9 @@
+/*
+Talha Talip Açıkgöz 
+AkilliTrafikIsiklari ® 2017
+See https://github.com/Talha-T/AkilliTrafikIsiklari/blob/master/LICENSE before using this code.
+*/
+
 const windowWidth = window.innerWidth; // Window width
 const windowHeight = window.innerHeight; // Window height
 
@@ -81,11 +87,13 @@ const red = "red";
 const green = "green";
 const yellow = "yellow";
 
-var bottomRightLight = createRect(roadHalf + roadWidth + 2, roadY + roadHeight, lightWidth, lightHeight, red, lightLayer);
-var bottomLeftLight = createRect(roadHalf - lightWidth, roadY + roadHeight, lightWidth, lightHeight, red, lightLayer);
+const offset = 45;
 
-var topLeftLight = createRect(roadHalf - lightWidth, roadHalfVertical - lightHeight, lightWidth, lightHeight, red, lightLayer);
-var topRightLight = createRect(roadHalf + roadWidth + 2, roadHalfVertical - lightHeight, lightWidth, lightHeight, red, lightLayer);
+var bottomRightLight = createRect(roadHalf + roadWidth + offset, roadY + roadHeight + offset / 3, lightWidth, lightHeight, red, lightLayer);
+var bottomLeftLight = createRect(roadHalf - lightWidth - offset, roadY + roadHeight + offset / 3, lightWidth, lightHeight, red, lightLayer);
+// / 3 is for less offset on Y
+var topLeftLight = createRect(roadHalf - lightWidth - offset, roadHalfVertical - lightHeight - offset / 3, lightWidth, lightHeight, red, lightLayer);
+var topRightLight = createRect(roadHalf + roadWidth + offset, roadHalfVertical - lightHeight - offset / 3, lightWidth, lightHeight, red, lightLayer);
 
 stage.add(lightLayer);
 
@@ -141,3 +149,9 @@ for (var i = 0; i < lights.length; i++) {
     var light = lights[i];
     startTimeout(light, i < 2);
 }
+
+// Print out stuff to help out
+
+console.log("Işık sürelerini değiştirmek için: timeouts.red=20 vb.");
+console.log("Bu kodu kullanmak istiyorsanız, lisansına göz atın: https://github.com/Talha-T/AkilliTrafikIsiklari/blob/master/LICENSE") ;
+console.log("Talha Talip Açıkgöz 2017, AkilliTrafikIsiklari ®");
