@@ -20,7 +20,7 @@ const multiplier = 7 / 1366 * 768 / windowHeight * windowWidth; // Better respon
 const roadWidth = windowWidth / multiplier; // Road width, responsive
 const roadHeight = windowHeight / multiplier * aspectRatio; // Multiplied with aspectRatio for responsiveness
 
-function calculateCenter(widthOrHeight, windowWidthOrHeight) { // Calculates center of a width
+function calculateLeft(widthOrHeight, windowWidthOrHeight) { // Calculates center of a width
     return windowWidthOrHeight / 2 - widthOrHeight / 2;
 }
 
@@ -63,8 +63,8 @@ function createRect(x, y, width, height, fill, layer) {
     return rect;
 }
 
-const roadX = calculateCenter(roadWidth, windowWidth); // Center X of the road
-const roadY = calculateCenter(roadHeight, windowHeight);
+const roadX = calculateLeft(roadWidth, windowWidth); // Center X of the road
+const roadY = calculateLeft(roadHeight, windowHeight);
 
 
 const roadHalfVertical = windowHeight / 2 - roadHeight / 2;
@@ -103,28 +103,28 @@ stage.add(lightLayer);
 var timeouts = {
     green: 4,
     red: 5,
-    yellow : 1
+    yellow: 1
 }
 
 var lights = [bottomLeftLight, topRightLight, topLeftLight, bottomRightLight];
 
-function startTimeout(light, isVertical) {
+function setupLight(light, isVertical) {
 
     const RG = isVertical ? red : green;
-    
+
     light.value = isVertical ? timeouts[red] : timeouts[green]; // Pre-arrange lights
 
     light.lastPrimary = RG;
 
-    
+
     light.changeLight = function (color) {
         this.fill(color);
         if (color != yellow)
-        this.lastPrimary = color;
+            this.lastPrimary = color;
         lightLayer.draw();
         value = timeouts[color];
     };
-    
+
     light.changeLight(RG);
 
     light.getNextColor = function () {
@@ -134,24 +134,27 @@ function startTimeout(light, isVertical) {
         }
         return yellow;
     };
+}
 
-    setInterval(function (light) { // Do these every second
+for (var i = 0; i < lights.length; i++) {
+    var light = lights[i];
+
+    setupLight(light, i < 2); // Opposite colors for opposite sides at the beginning.
+}
+
+setInterval(function () {
+    lights.forEach(light => {
         if (--light.value <= 0) {
             var color = light.getNextColor();
             light.changeLight(color);
             light.value = timeouts[color];
         }
         console.log("Işığın değişmesine " + light.value + " saniye");
-    }, 1000, light);
-}
-
-for (var i = 0; i < lights.length; i++) {
-    var light = lights[i];
-    startTimeout(light, i < 2);
-}
+    });
+}, 1000);
 
 // Print out stuff to help out
 
-console.log("Işık sürelerini değiştirmek için: timeouts.red=20 vb.");
-console.log("Bu kodu kullanmak istiyorsanız, lisansına göz atın: https://github.com/Talha-T/AkilliTrafikIsiklari/blob/master/LICENSE") ;
+console.log("Işık sürelerini değiştirmek için: timeouts.red=20 yazıp enter'a basın. Sarı ışığın süresini değiştirmek için timeouts.yellow=3 vs.");
+console.log("Bu kodu kullanmak istiyorsanız, lisansına göz atın: https://github.com/Talha-T/AkilliTrafikIsiklari/blob/master/LICENSE");
 console.log("Talha Talip Açıkgöz 2017, AkilliTrafikIsiklari ®");
