@@ -112,10 +112,9 @@ function setupLight(light, isVertical) {
 
     const RG = isVertical ? red : green;
 
-    light.value = isVertical ? timeouts[red] : timeouts[green]; // Pre-arrange lights
+    light.value = timeouts[RG]; // Pre-arrange lights
 
     light.lastPrimary = RG;
-
 
     light.changeLight = function (color) {
         this.fill(color);
